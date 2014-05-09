@@ -1,0 +1,157 @@
+<html>
+<head>
+  <title>
+    deathguild.js
+  </title>
+  <script src="dgdb.js"></script>
+  <link rel=stylesheet href=spinner.css type="text/css" />
+  <style>
+  .samplebox { float: right; }
+  .samplebox ul {
+    list-style-type: none;
+    border-bottom: 1px solid;
+    padding: 0 0 0 0;
+    margin: 0 0 1em 0;
+    
+    /* And behave like a UI element.
+     * Remind me how this mess is better than the old days?
+     */
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .samplebox ul li { border: 1px solid; border-bottom: 0px; padding: 0.25em; background: #F0F0F0; }
+  .samplebox ul li:hover { background: #E0E0E0; }
+  .samplebox ul li:active { background: #D0D0D0; }
+  .modal {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    border: 0px; margin: 0px;
+    background: #dddddd;
+  }
+  #spinner {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: rgba(0,0,0,0.3);
+  }
+  #spinner > div {
+    margin: auto;
+    top: 50%;
+  }
+  
+  #tabbar ul {
+    overflow: auto;
+    list-style-type: none;
+    padding: 0 0 0 0;
+    margin: 0 0 1em 0;
+    border-right: 1px solid #000000;
+    
+    /* And behave like a UI element.
+     * Remind me how this mess is better than the old days?
+     */
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  #tabbar ul li {
+    float: left;
+    border: 1px solid #000000;
+    border-right: 0px;
+    padding: 0.25em;
+    background: #F0F0F0;
+  }
+  #tabbar ul li:last-child {
+    border-right: 1px solid #000000;
+  }
+  #tabbar ul li:hover { background: #E0E0E0; }
+  #tabbar ul li:active { background: #D0D0D0; }
+  #tabbar ul li.current { background: #E0E0FF; }
+  #tabbar ul li.current:hover  { background: #D8D8F0; }
+  
+  </style>
+</head>
+<body>
+  <div id="spinner">
+  <div id="floatingBarsG">
+  <div class="blockG" id="rotateG_01">
+  </div>
+  <div class="blockG" id="rotateG_02">
+  </div>
+  <div class="blockG" id="rotateG_03">
+  </div>
+  <div class="blockG" id="rotateG_04">
+  </div>
+  <div class="blockG" id="rotateG_05">
+  </div>
+  <div class="blockG" id="rotateG_06">
+  </div>
+  <div class="blockG" id="rotateG_07">
+  </div>
+  <div class="blockG" id="rotateG_08">
+  </div>
+  </div>
+  </div>
+  <div id="errormsg" class="modal">Starting WebWorker (shouldn't take long)...</div>
+  
+  <div id="tabbar">
+  </div>
+
+  <div id="page_sql" style="display: none;">
+    <div class="samplebox">Samples:<ul id="samples"></ul></div>
+    <b>Enter some SQL</b>:
+    <br>
+    <textarea rows="10" cols="80" id="commands">SELECT count(*) AS plays,artists.artist,songs.title,songs.id as songid,artists.id as artistid
+  FROM plays
+  JOIN songs ON plays.song=songs.id
+  JOIN artists ON songs.artist=artists.id
+  GROUP BY song
+  ORDER BY plays DESC
+  LIMIT 20;
+</textarea>
+    <br>
+    <input id="execbtn" type="submit" value="execute">
+    <input id="execsongbtn" type="submit" value="execute (but with song view)">
+    <hr>
+    <div id="output"></div>
+  </div>
+  <div id="page_artist" style="display: none;">
+    <div id="page_artist_header_div"><span id="page_artist_artist"></span></div>
+    <div id="page_artist_plays_div">Plays: <span id="page_artist_plays"></span></div>
+    <div id="page_artist_songs_div">Songs: <div id="page_artist_songs"></div></div>
+  </div>
+  <div id="page_song" style="display: none;">
+    <div id="page_song_header_div"><span id="page_song_artist"></span> - <span id="page_song_title"></span></div>
+    <div id="page_song_plays_div">Plays: <span id="page_song_plays"></span></div>
+    <div id="page_song_sets_div">Sets: <ul id="page_song_sets"></ul></div>
+  </div>
+  <div id="page_set" style="display: none;">
+    <div id="page_set_header_div"></div>
+    <div id="page_set_songs"></div>
+  </div>
+  <div id="page_search" style="display: none;">
+    Search for: <input id="page_search_input" type="text" width="40"><br>
+    <input id="page_search_set" type="submit" value="search for set">
+    <input id="page_search_artist" type="submit" value="search for artist">
+    <input id="page_search_title" type="submit" value="search for title"><br>
+    (use % as a wildcard)
+    <hr>
+    <div id="page_search_results"></div>
+  </div>
+  <p class="credits">built by <a href="http://www.joshuawise.com">Joshua Wise</a>, using <a href="https://github.com/kripken/sql.js">sql.js</a>.  data scraped from <a href="http://www.deathguild.com/playlists/">Death Guild's playlist archives</a>.</p>
+
+</body>
+</html>
