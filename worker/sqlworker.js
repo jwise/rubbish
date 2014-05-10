@@ -1,5 +1,11 @@
-postMessage({ "type": "loading" });
-importScripts('sql.js', 'defaultdb.js', 'atob-polyfill.js');
+postMessage({ "type": "loading", contents: "SQL.js" });
+importScripts('sql.js');
+
+postMessage({ "type": "loading", contents: "database" });
+importScripts('defaultdb.js');
+
+postMessage({ "type": "loading", contents: "polyfill" });
+importScripts('atob-polyfill.js');
 
 var db = SQL.open(atob(defaultdb));
 self.addEventListener("message", function (ev) {

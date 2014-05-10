@@ -1,5 +1,5 @@
 /* WebWorker logic */
-var worker = new Worker("sqlworker.js");
+var worker = new Worker("worker/sqlworker.js");
 var tag = 0;
 var cbs = {};
 var errcbs = {}
@@ -13,7 +13,7 @@ worker.addEventListener("message", function (ev) {
       worker_modal("Internal error: "+data.contents);
     console.log(ev);
   } else if (data.type == "loading") {
-    worker_modal("Downloading and compiling resources...<br>(this could take a little bit)");
+    worker_modal("Downloading and compiling resources...<br>(this could take a little bit)<br>(<i>loading: "+data.contents+"</i>)");
     console.log("WebWorker: loading");
   } else if (data.type == "loaded") {
     worker_nomodal();

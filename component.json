@@ -1,0 +1,7 @@
+{
+  "name": "deathguild-js",
+  "dependencies": {
+    "necolas/normalize.css": "^3.0.0"
+  },
+  "scripts": ["src/dgdb.js"]
+}

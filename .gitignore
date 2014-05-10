@@ -1,0 +1,5 @@
+components/*
+build/*
+*~
+default.db
+worker/defaultdb.js
