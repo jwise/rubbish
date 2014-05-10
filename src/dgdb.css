@@ -65,3 +65,12 @@
 #tabbar ul li:active { background: #D0D0D0; }
 #tabbar ul li.current { background: #E0E0FF; }
 #tabbar ul li.current:hover { background: #D8D8F0; }
+
+body {
+  padding: 7px;
+}
+
+td,
+th {
+  padding: 3px;
+}
