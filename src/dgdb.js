@@ -1,63 +1,4 @@
-/* WebWorker logic */
-var worker = new Worker("worker/sqlworker.js");
-var tag = 0;
-var cbs = {};
-var errcbs = {}
-worker.addEventListener("message", function (ev) {
-  var data = ev.data;
-  if (data.type == "error") {
-    if (errcbs[data.tag]) {
-      errcbs[data.tag](data.contents);
-      errcbs[data.tag] = null;
-    } else
-      worker_modal("Internal error: "+data.contents);
-    console.log(ev);
-  } else if (data.type == "loading") {
-    worker_modal("Downloading and compiling resources...<br>(this could take a little bit)<br>(<i>loading: "+data.contents+"</i>)");
-    console.log("WebWorker: loading");
-  } else if (data.type == "loaded") {
-    worker_nomodal();
-    console.log("WebWorker: loaded");
-  } else if (data.type == "result") {
-    cbs[data.tag](data.contents);
-    cbs[data.tag] = null;
-  } else {
-    console.log("WebWorker: ???", data);
-  }
-}, false);
-
-var sql_outstanding = 0;
-
-function sql_exec(c, cb, errcb, spin) {
-  if (typeof spin === 'undefined') spin = true;
-  worker.postMessage({"type": "exec", "tag": tag, "contents": c});
-  if (spin) {
-    worker_spinner(true);
-    sql_outstanding++;
-    cbs[tag] = function (x) { sql_outstanding--; if (!sql_outstanding) worker_spinner(false); cb(x); };
-  } else {
-    cbs[tag] = cb;
-  }
-  errcbs[tag] = errcb;
-  tag++;
-}
-
-/* Worker error display logic */
-function worker_modal(msg) {
-  document.getElementById('errormsg').style.visibility = "visible";
-  document.getElementById('errormsg').innerHTML = msg;
-  worker_spinner(true);
-}
-
-function worker_nomodal() {
-  document.getElementById('errormsg').style.visibility = "hidden";
-  if (!sql_outstanding)
-    worker_spinner(false);
-}
-
-function worker_spinner(vis) {
-  document.getElementById('spinner').style.display = vis ? "block" : "none";
-}
+import sql from 'deathguild-js/src/sql.js';
 
 /* Table rendering logic */
 
@@ -307,26 +248,28 @@ function song_go(id) {
   console.log("song_go("+id+")");
   
   /* Populate the page. */
-  sql_exec(
+  sql.exec(
 "SELECT count(*) AS plays,artists.artist,songs.title, artists.id AS artistid\n\
   FROM songs\n\
   JOIN plays ON songs.id=plays.song\n\
   JOIN artists ON songs.artist=artists.id\n\
-  WHERE songs.id="+id+";",
-    function (t) {
+  WHERE songs.id="+id+";")
+    .spin()
+    .oncomplete(function (t) {
       format_artist(document.getElementById('page_song_artist'), t[0].artistid, t[0].artist);
       document.getElementById('page_song_title').innerHTML = t[0].title;
       document.getElementById('page_song_plays').innerHTML = t[0].plays;
-    }, worker_modal);
+    });
   
-  sql_exec(
+  sql.exec(
 "SELECT dates.id, dates.date\n\
   FROM songs\n\
   JOIN plays ON songs.id=plays.song\n\
   JOIN dates ON dates.id=plays.date\n\
   WHERE songs.id="+id+"\n\
-  ORDER BY dates.date ASC;",
-    function (t) {
+  ORDER BY dates.date ASC;")
+    .spin()
+    .oncomplete(function (t) {
       var ul = document.getElementById('page_song_sets');
       
       ul.innerHTML = "";
@@ -335,7 +278,7 @@ function song_go(id) {
         format_set(li, t[r].id, t[r].date);
         ul.appendChild(li);
       }
-    }, worker_modal);
+    });
 }
 
 /* Artist page */
@@ -346,30 +289,32 @@ function artist_go(id) {
   console.log("artist_go("+id+")");
   
   /* Populate the page. */
-  sql_exec(
+  sql.exec(
 "SELECT count(*) AS plays, artists.artist, artists.id AS artistid\n\
   FROM artists\n\
   JOIN songs ON songs.artist=artists.id\n\
   JOIN plays ON plays.song=songs.id\n\
-  WHERE artists.id="+id+";",
-    function (t) {
+  WHERE artists.id="+id+";")
+    .spin()
+    .oncomplete(function (t) {
       document.getElementById('page_artist_artist').innerHTML = t[0].artist;
       document.getElementById('page_artist_plays').innerHTML = t[0].plays;
-    }, worker_modal);
+    });
   
-  sql_exec(
+  sql.exec(
 "SELECT artists.id AS artistid, artists.artist AS artist, songs.id AS songid, songs.title, COUNT(*) AS plays\n\
   FROM artists\n\
   JOIN songs ON songs.artist=artists.id\n\
   JOIN plays ON plays.song=songs.id\n\
   WHERE artists.id="+id+"\n\
   GROUP BY songs.id\n\
-  ORDER BY plays DESC;",
-    function (t) {
+  ORDER BY plays DESC;")
+    .spin()
+    .oncomplete(function (t) {
       var set = document.getElementById('page_artist_songs');
       set.innerHTML = "";
       set.appendChild(table_format(t, [table_song(), table_cols(['plays'])]));
-    }, worker_modal);
+    });
 }
 
 /* Set page */
@@ -378,23 +323,25 @@ function set_go(id) {
   page_change('set');
   hash_set('set='+id);
   console.log("set_go("+id+")");
-  sql_exec("SELECT dates.id, dates.date FROM dates WHERE dates.id="+id+";",
-    function (t) {
+  sql.exec("SELECT dates.id, dates.date FROM dates WHERE dates.id="+id+";")
+    .spin()
+    .oncomplete(function (t) {
       document.getElementById('page_set_header_div').innerHTML = t[0].date;
-    }, worker_modal);
+    });
   
-  sql_exec(
+  sql.exec(
 "SELECT playorder,artists.artist,songs.title,songs.id as songid,artists.id as artistid,request\n\
   FROM plays\n\
   JOIN songs ON plays.song=songs.id\n\
   JOIN artists ON songs.artist=artists.id\n\
   WHERE date="+id+"\n\
-  ORDER BY playorder;",
-    function (t) {
+  ORDER BY playorder;")
+    .spin()
+    .oncomplete(function (t) {
       var set = document.getElementById('page_set_songs');
       set.innerHTML = "";
       set.appendChild(table_format(t, [table_cols(['playorder']), table_song(), table_cols(['request'])]));
-    }, worker_modal);
+    });
 }
 
 /* Search page */
@@ -403,18 +350,19 @@ function search_go_set(txt) {
   page_change('search');
   document.getElementById('page_search_input').value = txt;
   hash_set('search:set='+txt);
-  sql_exec(
+  sql.exec(
 "SELECT dates.id as dateid, dates.date, COUNT(*) as songs\n\
   FROM dates\n\
   JOIN plays ON plays.date=dates.id\n\
   WHERE dates.date LIKE '\%"+txt+"\%'\n\
   GROUP BY dates.date\n\
-  ORDER BY dates.date DESC;",
-    function (t) {
+  ORDER BY dates.date DESC;")
+    .spin()
+    .oncomplete(function (t) {
       var set = document.getElementById('page_search_results');
       set.innerHTML = "";
       set.appendChild(table_format(t, [table_set(), table_cols(['songs'])]));
-    }, worker_modal);
+    });
 }
 
 function search_go_artist(txt) {
@@ -422,7 +370,7 @@ function search_go_artist(txt) {
   page_change('search');
   document.getElementById('page_search_input').value = txt;
   hash_set('search:artist='+txt);
-  sql_exec(
+  sql.exec(
 "SELECT count(*) AS plays,artists.artist,artists.id as artistid\n\
   FROM plays\n\
   JOIN songs ON plays.song=songs.id\n\
@@ -430,8 +378,9 @@ function search_go_artist(txt) {
   WHERE artists.artist LIKE '\%"+txt+"\%'\n\
   GROUP BY artistid\n\
   ORDER BY plays DESC\n\
-  LIMIT "+max+";",
-    function (t) {
+  LIMIT "+max+";")
+    .spin()
+    .oncomplete(function (t) {
       var set = document.getElementById('page_search_results');
       set.innerHTML = "";
       set.appendChild(table_format(t, [table_artist(), table_cols(['plays'])]));
@@ -440,7 +389,7 @@ function search_go_artist(txt) {
         d.innerHTML = '<i><a href="http://cmubash.org/?81">Oooooooooooh... that was a bad idea!</a></i>';
         set.appendChild(d);
       }
-    }, worker_modal);
+    });
 }
 
 function search_go_title(txt) {
@@ -448,7 +397,7 @@ function search_go_title(txt) {
   page_change('search');
   document.getElementById('page_search_input').value = txt;
   hash_set('search:title='+txt);
-  sql_exec(
+  sql.exec(
 "SELECT count(*) AS plays,artists.artist,songs.title,songs.id as songid,artists.id as artistid\n\
   FROM plays\n\
   JOIN songs ON plays.song=songs.id\n\
@@ -456,8 +405,9 @@ function search_go_title(txt) {
   WHERE songs.title LIKE '\%"+txt+"\%'\n\
   GROUP BY song\n\
   ORDER BY plays DESC\n\
-  LIMIT "+max+";",
-    function (t) {
+  LIMIT "+max+";")
+    .spin()
+    .oncomplete(function (t) {
       var set = document.getElementById('page_search_results');
       set.innerHTML = "";
       set.appendChild(table_format(t, [table_song(), table_cols(['plays'])]));
@@ -466,7 +416,7 @@ function search_go_title(txt) {
         d.innerHTML = '<i><a href="http://cmubash.org/?81">Oooooooooooh... that was a bad idea!</a></i>';
         set.appendChild(d);
       }
-    }, worker_modal);
+    });
 }
 
 window.addEventListener('load', function() {
@@ -578,8 +528,6 @@ function outputtabsong(data) {
 function outputerror(err) {
   var elt = document.getElementById('output');
   elt.innerHTML = err;
-  sql_outstanding--;
-  worker_spinner(false);
 }
 
 function populate_samples() {
@@ -590,7 +538,10 @@ function populate_samples() {
     li.onclick = function(q) { return function() {
       var elt = document.getElementById("commands");
       commands.innerHTML = q.sql;
-      sql_exec(q.sql, outputtab, outputerror);
+      sql.exec(q.sql)
+        .spin()
+        .oncomplete(outputtab)
+        .onerror(outputerror);
     }}(sample_queries[i]);
     samples.appendChild(li);
   }
@@ -598,11 +549,17 @@ function populate_samples() {
 
 window.addEventListener('load', function() {
   document.getElementById('execbtn').onclick = function(ev) {
-    sql_exec(commands.value, outputtab, outputerror);
+    sql.exec(commands.value)
+      .spin()
+      .oncomplete(outputtab)
+      .onerror(outputerror);
     return false;
   };
   document.getElementById('execsongbtn').onclick = function(ev) {
-    sql_exec(commands.value, outputtabsong, outputerror);
+    sql.exec(commands.value)
+      .spin()
+      .oncomplete(outputtabsong)
+      .onerror(outputerror);
     return false;
   };
   populate_samples();

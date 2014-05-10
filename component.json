@@ -1,8 +1,11 @@
 {
   "name": "deathguild-js",
   "dependencies": {
-    "necolas/normalize.css": "^3.0.0"
+    "necolas/normalize.css": "^3.0.0",
+    "components/jquery": "^2.1.0"
   },
-  "scripts": ["src/dgdb.js"],
-  "styles": ["src/dgdb.css", "src/spinner.css"]
+  "scripts": [
+    "src/dgdb.js",
+    "src/sql.js"],
+  "styles": ["src/spinner.css", "src/dgdb.css"]
 }
