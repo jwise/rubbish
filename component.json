@@ -3,5 +3,6 @@
   "dependencies": {
     "necolas/normalize.css": "^3.0.0"
   },
-  "scripts": ["src/dgdb.js"]
+  "scripts": ["src/dgdb.js"],
+  "styles": ["src/dgdb.css", "src/spinner.css"]
 }
