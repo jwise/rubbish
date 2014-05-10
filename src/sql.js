@@ -1,3 +1,5 @@
+var $ = require("jquery");
+
 var worker = new Worker("worker/sqlworker.js");
 
 var tag = 0;
@@ -71,17 +73,17 @@ export function exec(c, cb, errcb, spin) {
 /* Probably shouldn't be here, but ... */
 
 function worker_modal(msg) {
-  document.getElementById('errormsg').style.visibility = "visible";
-  document.getElementById('errormsg').innerHTML = msg;
+  $('#errormsg').css('visibility', 'visible');
+  $('#errormsg').html(msg);
   worker_spinner(true);
 }
 
 function worker_nomodal() {
-  document.getElementById('errormsg').style.visibility = "hidden";
+  $('#errormsg').css('visibility', 'hidden');
   if (!outstanding)
     worker_spinner(false);
 }
 
 function worker_spinner(vis) {
-  document.getElementById('spinner').style.display = vis ? "block" : "none";
+  $('#spinner').css('display', vis ? "block" : "none");
 }
