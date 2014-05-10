@@ -51,7 +51,8 @@ function worker_modal(msg) {
 
 function worker_nomodal() {
   document.getElementById('errormsg').style.visibility = "hidden";
-  worker_spinner(false);
+  if (!sql_outstanding)
+    worker_spinner(false);
 }
 
 function worker_spinner(vis) {
@@ -446,7 +447,7 @@ function search_go_title(txt) {
   var max = 100;
   page_change('search');
   document.getElementById('page_search_input').value = txt;
-  hash_set('search:set='+txt);
+  hash_set('search:title='+txt);
   sql_exec(
 "SELECT count(*) AS plays,artists.artist,songs.title,songs.id as songid,artists.id as artistid\n\
   FROM plays\n\
