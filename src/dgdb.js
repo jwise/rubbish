@@ -1,4 +1,5 @@
 import sql from 'deathguild-js/src/sql.js';
+import router from 'deathguild-js/src/router.js';
 
 /* Table rendering logic */
 
@@ -31,14 +32,14 @@ function table_allcols(res) {
 
 function format_song(elt, artistid, artist, songid, title) {
   function clickartist(ev) {
-    artist_go(artistid);
+    window.location.hash = '#artist='+artistid;
     ev.stopPropagation();
     ev.preventDefault();
     return false;
   }
   
   function clicksong(ev) {
-    song_go(songid);
+    window.location.hash = '#song='+songid;
     ev.stopPropagation();
     ev.preventDefault();
     return false;
@@ -62,7 +63,7 @@ function format_song(elt, artistid, artist, songid, title) {
 
 function format_artist(elt, artistid, artist) {
   function clickartist(ev) {
-    artist_go(artistid);
+    window.location.hash = '#artist='+artistid;
     ev.stopPropagation();
     ev.preventDefault();
     return false;
@@ -81,7 +82,7 @@ function format_artist(elt, artistid, artist) {
 
 function format_set(elt, setid, date) {
   function clickset(ev) {
-    set_go(setid);
+    window.location.hash = '#set='+setid;
     ev.stopPropagation();
     ev.preventDefault();
     return false;
@@ -198,53 +199,140 @@ function table_format(res, formatters) {
   return tab;
 }
 
-/* Pages */
+/*** Search ***/
 
-var pages = [
-  { 'name': 'Search', 'id': 'search' },
-  { 'name': 'Artist view', 'id': 'artist' },
-  { 'name': 'Song view', 'id': 'song' },
-  { 'name': 'Set view', 'id': 'set' },
-  { 'name': 'SQL view', 'id': 'sql' },
-];
+function search_go_set(txt) {
+  router.tab_switch('search');
+  document.getElementById('page_search_input').value = txt;
+  sql.exec(
+"SELECT dates.id as dateid, dates.date, COUNT(*) as songs\n\
+  FROM dates\n\
+  JOIN plays ON plays.date=dates.id\n\
+  WHERE dates.date LIKE '\%"+txt+"\%'\n\
+  GROUP BY dates.date\n\
+  ORDER BY dates.date DESC;")
+    .spin()
+    .oncomplete(function (t) {
+      var set = document.getElementById('page_search_results');
+      set.innerHTML = "";
+      set.appendChild(table_format(t, [table_set(), table_cols(['songs'])]));
+    });
+}
 
-var curpage = 'sql';
-function page_change(page) {
-  document.getElementById('page_'+curpage).style.display = "none";
-  document.getElementById('tab_'+curpage).className = '';
-  document.getElementById('page_'+page).style.display = "block";
-  document.getElementById('tab_'+page).className = 'current';
-  
-  /* update tabs */
-  curpage = page;
+function search_go_artist(txt) {
+  var max = 100;
+  router.tab_switch('search');
+  document.getElementById('page_search_input').value = txt;
+  sql.exec(
+"SELECT count(*) AS plays,artists.artist,artists.id as artistid\n\
+  FROM plays\n\
+  JOIN songs ON plays.song=songs.id\n\
+  JOIN artists ON songs.artist=artists.id\n\
+  WHERE artists.artist LIKE '\%"+txt+"\%'\n\
+  GROUP BY artistid\n\
+  ORDER BY plays DESC\n\
+  LIMIT "+max+";")
+    .spin()
+    .oncomplete(function (t) {
+      var set = document.getElementById('page_search_results');
+      set.innerHTML = "";
+      set.appendChild(table_format(t, [table_artist(), table_cols(['plays'])]));
+      if (t.length == max) {
+        var d = document.createElement('div');
+        d.innerHTML = '<i><a href="http://cmubash.org/?81">Oooooooooooh... that was a bad idea!</a></i>';
+        set.appendChild(d);
+      }
+    });
+}
+
+function search_go_title(txt) {
+  var max = 100;
+  router.tab_switch('search');
+  document.getElementById('page_search_input').value = txt;
+  sql.exec(
+"SELECT count(*) AS plays,artists.artist,songs.title,songs.id as songid,artists.id as artistid\n\
+  FROM plays\n\
+  JOIN songs ON plays.song=songs.id\n\
+  JOIN artists ON songs.artist=artists.id\n\
+  WHERE songs.title LIKE '\%"+txt+"\%'\n\
+  GROUP BY song\n\
+  ORDER BY plays DESC\n\
+  LIMIT "+max+";")
+    .spin()
+    .oncomplete(function (t) {
+      var set = document.getElementById('page_search_results');
+      set.innerHTML = "";
+      set.appendChild(table_format(t, [table_song(), table_cols(['plays'])]));
+      if (t.length == max) {
+        var d = document.createElement('div');
+        d.innerHTML = '<i><a href="http://cmubash.org/?81">Oooooooooooh... that was a bad idea!</a></i>';
+        set.appendChild(d);
+      }
+    });
 }
 
 window.addEventListener('load', function() {
-  var tabbar = document.getElementById('tabbar');
-  
-  var ul = document.createElement("ul");
-  
-  for (p in pages) {
-    var li = document.createElement("li");
-    li.innerHTML = pages[p].name;
-    li.id = 'tab_' + pages[p].id;
-    li.addEventListener('click',
-      function(p) { return function(ev) {
-        page_change(pages[p].id);
-      }; }(p), false);
-    ul.appendChild(li);
-  }
-  
-  tabbar.appendChild(ul);
-  
-  page_change('search');
+  var inp = document.getElementById('page_search_input');
+  document.getElementById('page_search_set').onclick = function(ev) {
+    document.location.hash = '#search:set='+inp.value;
+    return false;
+  };
+  document.getElementById('page_search_artist').onclick = function(ev) {
+    document.location.hash = '#search:artist='+inp.value;
+    return false;
+  };
+  document.getElementById('page_search_title').onclick = function(ev) {
+    document.location.hash = '#search:title='+inp.value;
+    return false;
+  };
 });
 
-/* Song page */
+router.tab_add('Search', 'search');
+router.hash_add('search:set', search_go_set);
+router.hash_add('search:title', search_go_title);
+router.hash_add('search:artist', search_go_artist);
+
+/* Artist view */
+
+function artist_go(id) {
+  router.tab_switch('artist');
+  console.log("artist_go("+id+")");
+  
+  /* Populate the page. */
+  sql.exec(
+"SELECT count(*) AS plays, artists.artist, artists.id AS artistid\n\
+  FROM artists\n\
+  JOIN songs ON songs.artist=artists.id\n\
+  JOIN plays ON plays.song=songs.id\n\
+  WHERE artists.id="+id+";")
+    .spin()
+    .oncomplete(function (t) {
+      document.getElementById('page_artist_artist').innerHTML = t[0].artist;
+      document.getElementById('page_artist_plays').innerHTML = t[0].plays;
+    });
+  
+  sql.exec(
+"SELECT artists.id AS artistid, artists.artist AS artist, songs.id AS songid, songs.title, COUNT(*) AS plays\n\
+  FROM artists\n\
+  JOIN songs ON songs.artist=artists.id\n\
+  JOIN plays ON plays.song=songs.id\n\
+  WHERE artists.id="+id+"\n\
+  GROUP BY songs.id\n\
+  ORDER BY plays DESC;")
+    .spin()
+    .oncomplete(function (t) {
+      var set = document.getElementById('page_artist_songs');
+      set.innerHTML = "";
+      set.appendChild(table_format(t, [table_song(), table_cols(['plays'])]));
+    });
+}
+router.tab_add('Artist view', 'artist');
+router.hash_add('artist', function(l) { artist_go(parseInt(l)); });
+
+/* Song view */
 
 function song_go(id) {
-  page_change('song');
-  hash_set("song="+id);
+  router.tab_switch('song');
   console.log("song_go("+id+")");
   
   /* Populate the page. */
@@ -280,48 +368,12 @@ function song_go(id) {
       }
     });
 }
+router.tab_add('Song view', 'song');
+router.hash_add('song', function(l) { song_go(parseInt(l)); });
 
-/* Artist page */
-
-function artist_go(id) {
-  page_change('artist');
-  hash_set("artist="+id);
-  console.log("artist_go("+id+")");
-  
-  /* Populate the page. */
-  sql.exec(
-"SELECT count(*) AS plays, artists.artist, artists.id AS artistid\n\
-  FROM artists\n\
-  JOIN songs ON songs.artist=artists.id\n\
-  JOIN plays ON plays.song=songs.id\n\
-  WHERE artists.id="+id+";")
-    .spin()
-    .oncomplete(function (t) {
-      document.getElementById('page_artist_artist').innerHTML = t[0].artist;
-      document.getElementById('page_artist_plays').innerHTML = t[0].plays;
-    });
-  
-  sql.exec(
-"SELECT artists.id AS artistid, artists.artist AS artist, songs.id AS songid, songs.title, COUNT(*) AS plays\n\
-  FROM artists\n\
-  JOIN songs ON songs.artist=artists.id\n\
-  JOIN plays ON plays.song=songs.id\n\
-  WHERE artists.id="+id+"\n\
-  GROUP BY songs.id\n\
-  ORDER BY plays DESC;")
-    .spin()
-    .oncomplete(function (t) {
-      var set = document.getElementById('page_artist_songs');
-      set.innerHTML = "";
-      set.appendChild(table_format(t, [table_song(), table_cols(['plays'])]));
-    });
-}
-
-/* Set page */
-
+/* Set view */
 function set_go(id) {
-  page_change('set');
-  hash_set('set='+id);
+  router.tab_switch('set');
   console.log("set_go("+id+")");
   sql.exec("SELECT dates.id, dates.date FROM dates WHERE dates.id="+id+";")
     .spin()
@@ -343,99 +395,11 @@ function set_go(id) {
       set.appendChild(table_format(t, [table_cols(['playorder']), table_song(), table_cols(['request'])]));
     });
 }
+router.tab_add('Set view', 'set');
+router.hash_add('set', function(l) { set_go(parseInt(l)); });
 
-/* Search page */
 
-function search_go_set(txt) {
-  page_change('search');
-  document.getElementById('page_search_input').value = txt;
-  hash_set('search:set='+txt);
-  sql.exec(
-"SELECT dates.id as dateid, dates.date, COUNT(*) as songs\n\
-  FROM dates\n\
-  JOIN plays ON plays.date=dates.id\n\
-  WHERE dates.date LIKE '\%"+txt+"\%'\n\
-  GROUP BY dates.date\n\
-  ORDER BY dates.date DESC;")
-    .spin()
-    .oncomplete(function (t) {
-      var set = document.getElementById('page_search_results');
-      set.innerHTML = "";
-      set.appendChild(table_format(t, [table_set(), table_cols(['songs'])]));
-    });
-}
-
-function search_go_artist(txt) {
-  var max = 100;
-  page_change('search');
-  document.getElementById('page_search_input').value = txt;
-  hash_set('search:artist='+txt);
-  sql.exec(
-"SELECT count(*) AS plays,artists.artist,artists.id as artistid\n\
-  FROM plays\n\
-  JOIN songs ON plays.song=songs.id\n\
-  JOIN artists ON songs.artist=artists.id\n\
-  WHERE artists.artist LIKE '\%"+txt+"\%'\n\
-  GROUP BY artistid\n\
-  ORDER BY plays DESC\n\
-  LIMIT "+max+";")
-    .spin()
-    .oncomplete(function (t) {
-      var set = document.getElementById('page_search_results');
-      set.innerHTML = "";
-      set.appendChild(table_format(t, [table_artist(), table_cols(['plays'])]));
-      if (t.length == max) {
-        var d = document.createElement('div');
-        d.innerHTML = '<i><a href="http://cmubash.org/?81">Oooooooooooh... that was a bad idea!</a></i>';
-        set.appendChild(d);
-      }
-    });
-}
-
-function search_go_title(txt) {
-  var max = 100;
-  page_change('search');
-  document.getElementById('page_search_input').value = txt;
-  hash_set('search:title='+txt);
-  sql.exec(
-"SELECT count(*) AS plays,artists.artist,songs.title,songs.id as songid,artists.id as artistid\n\
-  FROM plays\n\
-  JOIN songs ON plays.song=songs.id\n\
-  JOIN artists ON songs.artist=artists.id\n\
-  WHERE songs.title LIKE '\%"+txt+"\%'\n\
-  GROUP BY song\n\
-  ORDER BY plays DESC\n\
-  LIMIT "+max+";")
-    .spin()
-    .oncomplete(function (t) {
-      var set = document.getElementById('page_search_results');
-      set.innerHTML = "";
-      set.appendChild(table_format(t, [table_song(), table_cols(['plays'])]));
-      if (t.length == max) {
-        var d = document.createElement('div');
-        d.innerHTML = '<i><a href="http://cmubash.org/?81">Oooooooooooh... that was a bad idea!</a></i>';
-        set.appendChild(d);
-      }
-    });
-}
-
-window.addEventListener('load', function() {
-  var inp = document.getElementById('page_search_input');
-  document.getElementById('page_search_set').onclick = function(ev) {
-    search_go_set(inp.value);
-    return false;
-  };
-  document.getElementById('page_search_artist').onclick = function(ev) {
-    search_go_artist(inp.value);
-    return false;
-  };
-  document.getElementById('page_search_title').onclick = function(ev) {
-    search_go_title(inp.value);
-    return false;
-  };
-});
-
-/* SQL demo page */
+/* Advanced view */
 
 var sample_queries = [
 {"name": "what's overplayed?", "sql": "SELECT count(*) AS plays,artists.artist,songs.title\n\
@@ -563,50 +527,8 @@ window.addEventListener('load', function() {
     return false;
   };
   populate_samples();
-  hash_update();
 });
 
+router.tab_add('SQL view', 'sql');
 
-var hash_known = "";
 
-function hash_set(h) {
-  if (!h.match(/#.*/))
-    h = "#"+h;
-  hash_known = h;
-  window.location.hash = h;
-}
-
-function hash_update() {
-  if (window.location.hash == hash_known) {
-    console.log("hashchange skipped");
-    return;
-  }
-  hash_known = window.location.hash;
-  
-  var re = /#(.*)=(.*)/;
-  var a = window.location.hash.match(re);
-  console.log("hashchange");
-  if (!a) {
-    console.log("hashchange: unmatched?");
-    return;
-  }
-  
-  if (a[1] == 'set')
-    set_go(parseInt(a[2]));
-  else if (a[1] == 'artist')
-    artist_go(parseInt(a[2]));
-  else if (a[1] == 'song')
-    song_go(parseInt(a[2]));
-  else if (a[1] == 'search:set')
-    search_go_set(a[2]);
-  else if (a[1] == 'search:title')
-    search_go_title(a[2]);
-  else if (a[1] == 'search:artist')
-    search_go_artist(a[2]);
-  else
-    console.log("hashchange: unmatched tab name?");
-}
-
-window.addEventListener('hashchange', function() {
-  hash_update();
-});

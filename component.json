@@ -6,6 +6,7 @@
   },
   "scripts": [
     "src/dgdb.js",
-    "src/sql.js"],
+    "src/sql.js",
+    "src/router.js"],
   "styles": ["src/spinner.css", "src/dgdb.css"]
 }
