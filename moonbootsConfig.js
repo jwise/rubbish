@@ -15,6 +15,12 @@ module.exports = {
     //     '/{p*}' - match everything that isn't matched by something more specific
     //     '/dashboard/{p*}' - serve the app at all routes starting with '/dashboard'
     appPath: '/{p*}',
+    
+    // Bits for moonboots-static.
+    public: __dirname + '/public',
+    directory: __dirname + '/build',
+    verbose: true,
+    
     // The moonboots config
     moonboots: {
         // The base name of the javascript file served in the <script src="the_name.*.js">
@@ -23,6 +29,7 @@ module.exports = {
         cssFileName: 'demo-app',
         main: appDir + '/app.js',
         developmentMode: config.isDev,
+        resourcePrefix: '',
         // Specify any non-commonjs libraries we wish to include.
         // You can think of this as your list of <script> tags in your HTML.
         // These will simply be included before any of your application code in the
