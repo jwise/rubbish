@@ -36,7 +36,7 @@ module.exports = {
             mainView.render();
 
             // we have what we need, we can now start our router and show the appropriate page
-            self.router.history.start({pushState: true, root: '/'});
+            self.router.history.start({pushState: false, root: '/'});
         });
     },
 
