@@ -25,7 +25,9 @@
     "templatizer": "^1.0.0",
     "underscore": "^1.6.0",
     "moonboots": "~3.0.0",
-    "moonboots-static": "~1.1.0"
+    "moonboots-static": "~1.1.0",
+    "ampersand-collection": "~1.3.16",
+    "ampersand-state": "~4.3.13"
   },
   "devDependencies": {},
   "jshintConfig": {

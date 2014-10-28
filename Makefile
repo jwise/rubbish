@@ -1,0 +1,2 @@
+all:
+	moonboots moonbootsConfig.js
