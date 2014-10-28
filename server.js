@@ -23,6 +23,13 @@ server.ext('onPreResponse', function(request, reply) {
     }
 });
 
+server.route({
+    method: 'GET',
+    path: '/db.json',
+    handler: function (request, reply) {
+        reply.file(__dirname + '/public/db.json');
+    }
+});
 
 // require moonboots_hapi plugin
 server.pack.register({plugin: require('moonboots_hapi'), options: moonbootsConfig}, function (err) {
@@ -36,3 +43,4 @@ server.pack.register({plugin: require('moonboots_hapi'), options: moonbootsConfi
         });
     });
 });
+
