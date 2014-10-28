@@ -24,9 +24,9 @@ module.exports = {
     // The moonboots config
     moonboots: {
         // The base name of the javascript file served in the <script src="the_name.*.js">
-        jsFileName: 'demo-app',
+        jsFileName: 'deathguild',
         // The base name of the css file served in the <link rel="stylesheet" src="the_name.*.css">
-        cssFileName: 'demo-app',
+        cssFileName: 'deathguild',
         main: appDir + '/app.js',
         developmentMode: config.isDev,
         resourcePrefix: '',
