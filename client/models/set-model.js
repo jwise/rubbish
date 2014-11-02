@@ -4,9 +4,23 @@ var PlayCollection = require('./play-collection');
 module.exports = AmpersandState.extend({
     props: {
         id: 'number',
-        date: 'string'
+        date: 'string',
+        plays: 'array'
     },
-    collections: {
-        plays: PlayCollection
+    derived: {
+        viewUrl: {
+            deps: ['id'],
+            cache: true,
+            fn: function () {
+                return '#set/' + this.id;
+            }
+        },
+        playCount: {
+            deps: ['plays'],
+            cache: true,
+            fn: function () {
+                return this.plays.length();
+            }
+        }
     }
 });

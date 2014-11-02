@@ -6,6 +6,7 @@ var InfoPage = require('./pages/info');
 var PersonAddPage = require('./pages/person-add');
 var PersonEditPage = require('./pages/person-edit');
 var PersonViewPage = require('./pages/person-view');
+var AllSetsPage = require('./pages/all-sets');
 
 
 module.exports = Router.extend({
@@ -16,6 +17,7 @@ module.exports = Router.extend({
         'person/add': 'personAdd',
         'person/:id': 'personView',
         'person/:id/edit': 'personEdit',
+        'sets': 'allSets',
         '(*path)': 'catchAll'
     },
 
@@ -30,6 +32,13 @@ module.exports = Router.extend({
         this.trigger('page', new CollectionDemo({
             model: me,
             collection: app.people
+        }));
+    },
+    
+    allSets: function () {
+        this.trigger('page', new AllSetsPage({
+            model: me,
+            collection: app.world.sets
         }));
     },
 
