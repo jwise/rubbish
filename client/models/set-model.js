@@ -19,7 +19,7 @@ module.exports = AmpersandState.extend({
             deps: ['plays'],
             cache: true,
             fn: function () {
-                return this.plays.length();
+                return this.plays.length;
             }
         }
     }
