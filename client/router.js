@@ -7,6 +7,7 @@ var PersonAddPage = require('./pages/person-add');
 var PersonEditPage = require('./pages/person-edit');
 var PersonViewPage = require('./pages/person-view');
 var AllSetsPage = require('./pages/all-sets');
+var SetViewPage = require('./pages/set-view');
 
 
 module.exports = Router.extend({
@@ -18,6 +19,7 @@ module.exports = Router.extend({
         'person/:id': 'personView',
         'person/:id/edit': 'personEdit',
         'sets': 'allSets',
+        'set/:id': 'setView',
         '(*path)': 'catchAll'
     },
 
@@ -39,6 +41,12 @@ module.exports = Router.extend({
         this.trigger('page', new AllSetsPage({
             model: me,
             collection: app.world.sets
+        }));
+    },
+    
+    setView: function (id) {
+        this.trigger('page', new SetViewPage({
+            id: id
         }));
     },
 
@@ -65,6 +73,7 @@ module.exports = Router.extend({
     },
 
     catchAll: function () {
+        console.log('warning: catchall!');
         this.redirectTo('');
     }
 });

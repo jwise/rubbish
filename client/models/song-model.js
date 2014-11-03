@@ -5,5 +5,14 @@ module.exports = AmpersandState.extend({
         id: 'number',
         artistid: 'number',
         title: 'string'
+    },
+    derived: {
+        artist: {
+            deps: ['artistid'],
+            cache: false,
+            fn: function() {
+                return app.world.artists.get(this.artistid)
+            }
+        }
     }
 });

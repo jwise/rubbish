@@ -9,5 +9,8 @@ module.exports = PageView.extend({
     render: function () {
         this.renderWithTemplate();
         this.renderCollection(this.collection, SetShortView, this.queryByHook('set-list'));
+    },
+    initialize: function(spec) {
+        this.pages = this.collection.length / 20;
     }
 });
