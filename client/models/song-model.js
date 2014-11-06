@@ -7,6 +7,13 @@ module.exports = AmpersandState.extend({
         title: 'string'
     },
     derived: {
+        viewUrl: {
+            deps: ['id'],
+            cache: true,
+            fn: function () {
+                return '/song/' + this.id;
+            }
+        },
         artist: {
             deps: ['artistid'],
             cache: false,

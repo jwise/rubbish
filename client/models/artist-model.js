@@ -4,5 +4,14 @@ module.exports = AmpersandState.extend({
     props: {
         id: 'number',
         artist: 'string'
+    },
+    derived: {
+        viewUrl: {
+            deps: ['id'],
+            cache: true,
+            fn: function () {
+                return '/artist/' + this.id;
+            }
+        }
     }
 });
