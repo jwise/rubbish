@@ -11,7 +11,7 @@ var dom = require('ampersand-dom');
 var templates = require('../templates');
 var tracking = require('../helpers/metrics');
 var setFavicon = require('favicon-setter');
-
+var loading = require('../pages/loading');
 
 module.exports = View.extend({
     template: templates.body,

@@ -9,6 +9,7 @@ var MainView = require('./views/main');
 var Me = require('./models/me');
 var People = require('./models/persons');
 var WorldModel = require('./models/world-model');
+var LoadingPage = require('./pages/loading');
 var domReady = require('domready');
 
 
@@ -22,9 +23,13 @@ module.exports = {
         this.people = new People();
         
         this.world = new WorldModel();
-        this.world.fetch();
+        this.world.fetch({
+            success: function () {
+                // *NOW* we can kick off the router.
+                self.router.history.start({pushState: false, root: '/'});
+            }
+        });
 
-        // init our URL handlers and the history tracker
         this.router = new Router();
 
         // wait for document ready to render our main view
@@ -38,9 +43,7 @@ module.exports = {
 
             // ...and render it
             mainView.render();
-
-            // we have what we need, we can now start our router and show the appropriate page
-            self.router.history.start({pushState: false, root: '/'});
+            mainView.handleNewPage(new LoadingPage());
         });
     },
 
