@@ -1,6 +1,6 @@
 var View = require('ampersand-view');
-var templates = require('../templates');
-var SongLink = require('./song-link');
+var templates = require('../../templates');
+var SongLink = require('../../views/song-link');
 
 module.exports = View.extend({
     template: templates.pages.setView.play,

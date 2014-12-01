@@ -1,14 +1,14 @@
 var PageView = require('./base');
 var templates = require('../templates');
-var SetShortView = require('../views/set-short');
+var SetView = require('./all-sets/set');
 
 
 module.exports = PageView.extend({
     pageTitle: 'all sets',
-    template: templates.pages.allSets,
+    template: templates.pages.allSets.page,
     render: function () {
         this.renderWithTemplate();
-        this.renderCollection(this.collection, SetShortView, this.queryByHook('set-list'));
+        this.renderCollection(this.collection, SetView, this.queryByHook('set-list'));
     },
     initialize: function(spec) {
         this.pages = this.collection.length / 20;

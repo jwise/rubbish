@@ -1,7 +1,7 @@
 /*global app*/
 var PageView = require('./base');
 var templates = require('../templates');
-var PlayEntryView = require('../views/play-entry');
+var PlayEntryView = require('./set-view/play-entry');
 
 module.exports = PageView.extend({
     pageTitle: 'set view',

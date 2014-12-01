@@ -1,9 +1,8 @@
 var View = require('ampersand-view');
-var templates = require('../templates');
-
+var templates = require('../../templates');
 
 module.exports = View.extend({
-    template: templates.includes.setInList,
+    template: templates.pages.allSets.set,
     bindings: {
         'model.date': '[data-hook~=date]',
         'model.playCount': '[data-hook~=plays]',
