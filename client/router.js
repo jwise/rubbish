@@ -10,6 +10,7 @@ var AllSetsPage = require('./pages/all-sets');
 var SetViewPage = require('./pages/set-view');
 var ArtistViewPage = require('./pages/artist-view');
 var SongViewPage = require('./pages/song-view');
+var SearchArtistPage = require('./pages/search-artist');
 
 
 module.exports = Router.extend({
@@ -24,6 +25,7 @@ module.exports = Router.extend({
         'set/:id': 'setView',
         'artist/:id': 'artistView',
         'song/:id': 'songView',
+        'search/artist/:query': 'searchArtist',
         '(*path)': 'catchAll'
     },
 
@@ -63,6 +65,12 @@ module.exports = Router.extend({
     songView: function (id) {
         this.trigger('page', new SongViewPage({
             id: id
+        }));
+    },
+    
+    searchArtist: function (query) {
+        this.trigger('page', new SearchArtistPage({
+            query: query
         }));
     },
 

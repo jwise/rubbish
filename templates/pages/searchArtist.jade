@@ -1,0 +1,13 @@
+section.page.searchArtist
+  h2
+    span Search results for &nbsp;&quot;
+    span(data-hook="query")
+    span &quot;
+
+  table.table.table-striped.table-hover.table-bordered
+    thead
+      tr
+        th Artist
+    tbody(data-hook="results")
+
+          
