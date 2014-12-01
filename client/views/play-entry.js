@@ -3,7 +3,7 @@ var templates = require('../templates');
 var SongLink = require('./song-link');
 
 module.exports = View.extend({
-    template: templates.includes.playEntry,
+    template: templates.pages.setView.play,
     bindings: {
         'model.id': {
             type: function (el, value) { el.innerHTML = value + 1; },

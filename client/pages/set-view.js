@@ -5,7 +5,7 @@ var PlayEntryView = require('../views/play-entry');
 
 module.exports = PageView.extend({
     pageTitle: 'set view',
-    template: templates.pages.setView,
+    template: templates.pages.setView.page,
     bindings: {
         'model.date': '[data-hook~=date]'
     },
