@@ -4,7 +4,7 @@ var templates = require('../templates');
 var ArtistViewSong = require('./artist-view/song');
 
 module.exports = PageView.extend({
-    pageTitle: 'set view',
+    pageTitle: 'artist view',
     template: templates.pages.artistView.page,
     bindings: {
         'model.artist': '[data-hook~=artist]',

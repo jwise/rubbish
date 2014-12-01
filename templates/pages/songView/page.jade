@@ -1,0 +1,15 @@
+section.page.songView
+  h2
+    a(data-hook="artist")
+    span &nbsp;&ndash;&nbsp;
+    span(data-hook="title")
+  
+  p
+    span Total plays:&nbsp;
+    span(data-hook="playcount")
+
+  table.table.table-striped.table-hover.table-bordered
+    thead
+      tr
+        th Date
+    tbody(data-hook="sets")
