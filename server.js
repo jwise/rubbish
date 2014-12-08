@@ -2,7 +2,6 @@ var Hapi = require('hapi');
 var config = require('getconfig');
 var server = new Hapi.Server(config.http.listen, config.http.port);
 var moonbootsConfig = require('./moonbootsConfig');
-var fakeApi = require('./fakeApi');
 var internals = {};
 
 // set clientconfig cookie
@@ -34,13 +33,10 @@ server.route({
 // require moonboots_hapi plugin
 server.pack.register({plugin: require('moonboots_hapi'), options: moonbootsConfig}, function (err) {
     if (err) throw err;
-    server.pack.register(fakeApi, function (err) {
+    // If everything loaded correctly, start the server:
+    server.start(function (err) {
         if (err) throw err;
-        // If everything loaded correctly, start the server:
-        server.start(function (err) {
-            if (err) throw err;
-            console.log("deathguild.js is running at: http://localhost:" + config.http.port + " Yep. That\'s pretty awesome.");
-        });
+        console.log("deathguild.js is running at: http://localhost:" + config.http.port + " Yep. That\'s pretty awesome.");
     });
 });
 
