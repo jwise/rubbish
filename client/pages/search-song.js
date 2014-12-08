@@ -18,6 +18,7 @@ module.exports = PageView.extend({
     initialize: function (spec) {
         var self = this;
         
+        this.pageTitle = "search results: title: " + spec.query;
         this.query_val = spec.query;
         var re = new RegExp(this.query_val, 'i');
         this.results = new SongCollection(app.world.songs.filter(function (song) { return song.title.match(re); })); 

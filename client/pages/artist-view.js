@@ -20,5 +20,6 @@ module.exports = PageView.extend({
         var self = this;
         
         this.model = app.world.artists.get(spec.id);
+        this.pageTitle = this.model.artist;
     }
 });

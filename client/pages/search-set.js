@@ -18,6 +18,7 @@ module.exports = PageView.extend({
     initialize: function (spec) {
         var self = this;
         
+        this.pageTitle = "search results: set: " + spec.query;
         this.query_val = spec.query;
         var re = new RegExp(this.query_val, 'i');
         this.results = new SetCollection(app.world.sets.filter(function (set) { return set.date.match(re); })); 

@@ -33,7 +33,8 @@ module.exports = View.extend({
         this.pageSwitcher = new ViewSwitcher(this.queryByHook('page-container'), {
             show: function (newView, oldView) {
                 // it's inserted and rendered for me
-                document.title = _.result(newView, 'pageTitle') || "deathguild.js";
+                document.title = _.result(newView, 'pageTitle') || "home";
+                document.title += " - deathguild.js";
                 document.scrollTop = 0;
 
                 // add a class specifying it's active

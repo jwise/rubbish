@@ -29,5 +29,6 @@ module.exports = PageView.extend({
         var self = this;
         
         this.model = app.world.songs.get(spec.id);
+        this.pageTitle = this.model.title;
     }
 });

@@ -17,5 +17,6 @@ module.exports = PageView.extend({
         var self = this;
         
         this.model = app.world.sets.get(spec.id);
+        this.pageTitle = this.model.date;
     }
 });

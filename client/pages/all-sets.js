@@ -4,7 +4,7 @@ var SetView = require('./all-sets/set');
 
 
 module.exports = PageView.extend({
-    pageTitle: 'all sets',
+    pageTitle: 'sets',
     template: templates.pages.allSets.page,
     render: function () {
         this.renderWithTemplate();
