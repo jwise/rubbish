@@ -12,7 +12,8 @@ var ArtistViewPage = require('./pages/artist-view');
 var SongViewPage = require('./pages/song-view');
 var SearchArtistPage = require('./pages/search-artist');
 var SearchSongPage = require('./pages/search-song');
-
+var SearchSetPage = require('./pages/search-set');
+var SearchPage = require('./pages/search');
 
 module.exports = Router.extend({
     routes: {
@@ -29,6 +30,9 @@ module.exports = Router.extend({
         'search/artist/:query': 'searchArtist',
         'search/song/:query': 'searchSong',
         'search/title/:query': 'searchSong',
+        'search/set/:query': 'searchSet',
+        'search/(*path)': 'search',
+        'search': 'search',
         '(*path)': 'catchAll'
     },
 
@@ -81,6 +85,16 @@ module.exports = Router.extend({
         this.trigger('page', new SearchSongPage({
             query: query
         }));
+    },
+
+    searchSet: function (query) {
+        this.trigger('page', new SearchSetPage({
+            query: query
+        }));
+    },
+
+    search: function () {
+        this.trigger('page', new SearchPage());
     },
 
     info: function () {

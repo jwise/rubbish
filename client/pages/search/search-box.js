@@ -5,7 +5,8 @@ module.exports = View.extend({
     template: templates.pages.search.searchbox,
     events: {
         'click [data-hook~=artist]': 'handleArtistSearch',
-        'click [data-hook~=songs]': 'handleSongSearch'
+        'click [data-hook~=songs]': 'handleSongSearch',
+        'click [data-hook~=sets]': 'handleSetSearch'
     },
     bindings: {
         'query_val': {
@@ -19,6 +20,9 @@ module.exports = View.extend({
     },
     handleSongSearch: function (e) {
         app.navigate('/search/title/' + encodeURIComponent(this.queryByHook('query').value));
+    },
+    handleSetSearch: function (e) {
+        app.navigate('/search/set/' + encodeURIComponent(this.queryByHook('query').value));
     },
     initialize: function (spec) {
         this.query_val = spec.query_val;
