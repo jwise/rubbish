@@ -13,8 +13,9 @@ var SearchPage = require('./pages/search');
 module.exports = Router.extend({
     routes: {
         '': 'home',
-        'sets': 'allSets',
+        'set/latest': 'latestSet',
         'set/:id': 'setView',
+        'set': 'allSets',
         'artist/:id': 'artistView',
         'song/:id': 'songView',
         'search/artist/:query': 'searchArtist',
@@ -37,6 +38,15 @@ module.exports = Router.extend({
         }));
     },
     
+    latestSet: function () {
+        app.world.sets.comparator = 'date';
+        app.world.sets.sort();
+        var set = app.world.sets.at(app.world.sets.length-1);
+        this.trigger('page', new SetViewPage({
+            id: set.id
+        }));
+    },
+
     setView: function (id) {
         this.trigger('page', new SetViewPage({
             id: id
