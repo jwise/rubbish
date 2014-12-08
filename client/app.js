@@ -6,22 +6,15 @@ var config = require('clientconfig');
 var Router = require('./router');
 var tracking = require('./helpers/metrics');
 var MainView = require('./views/main');
-var Me = require('./models/me');
-var People = require('./models/persons');
 var WorldModel = require('./models/world-model');
 var LoadingPage = require('./pages/loading');
 var domReady = require('domready');
-
 
 module.exports = {
     // this is the the whole app initter
     blastoff: function () {
         var self = window.app = this;
 
-        // create our global 'me' object and an empty collection for our people models.
-        window.me = new Me();
-        this.people = new People();
-        
         this.world = new WorldModel();
         this.world.fetch({
             success: function () {
@@ -37,7 +30,6 @@ module.exports = {
         domReady(function () {
             // init our main view
             var mainView = self.view = new MainView({
-                model: me,
                 el: document.body
             });
 
