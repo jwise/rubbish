@@ -1,0 +1,16 @@
+section.page.searchSong
+  span(data-hook="searchbox")
+
+  h2
+    span Search results for &ldquo;
+    span(data-hook="query")
+    span &rdquo;
+
+  table.table.table-striped.table-hover.table-bordered
+    thead
+      tr
+        th Song
+        th Plays
+    tbody(data-hook="results")
+
+          
