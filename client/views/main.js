@@ -34,7 +34,7 @@ module.exports = View.extend({
             show: function (newView, oldView) {
                 // it's inserted and rendered for me
                 document.title = _.result(newView, 'pageTitle') || "home";
-                document.title += " - deathguild.js";
+                document.title += " - deathguild browser";
                 document.scrollTop = 0;
 
                 // add a class specifying it's active

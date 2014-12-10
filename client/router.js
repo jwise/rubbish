@@ -12,7 +12,7 @@ var SearchPage = require('./pages/search');
 
 module.exports = Router.extend({
     routes: {
-        '': 'home',
+        'info': 'home',
         'set/latest': 'latestSet',
         'set/:id': 'setView',
         'set': 'allSets',
@@ -89,6 +89,6 @@ module.exports = Router.extend({
 
     catchAll: function () {
         console.log('warning: catchall!');
-        this.redirectTo('');
+        this.redirectTo('set/latest');
     }
 });

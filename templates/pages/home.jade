@@ -1,9 +1,52 @@
 section.page.home
-  h2 deathguild.js
+  h2 about dgbrowser
 
-  p Blah blah blah blah blah
-
-  ul
-    li Crap
-    li BS
-    li Other crap
+  p
+    | The Death Guild Browser is a tool to explore the playlist archives of 
+   
+    a(href='http://www.deathguild.com/') everyone's favorite goth club
+   
+    | . &nbsp;It's updated every week or so &mdash; usually a day or so
+    | after Ed uploads the playlist to the official Death Guild site
+    | &mdash; and is otherwise maintained by 
+   
+    a(href='http://www.joshuawise.com/') Joshua Wise
+   
+    | . &nbsp;It requires a pretty modern web browser; if it doesn't work well
+    | for you, you might also want to try 
+   
+    a(href='http://nyus.joshuawise.com/dgsql/') dgsql
+   
+    | , an older version of the Death Guild Browser.
+  
+  p
+    | If you like dgbrowser &mdash; or you don't, for that matter &mdash;
+    | please feel free to
+    
+    a(href='mailto:joshua at joshuawise dot com') send me mail
+    
+    | .
+  
+  h3 stuff for nerds
+  
+  p
+    | dgbrowser was my first project in building a web site to do actual
+    | things, and it probably shows.  It was built using a handful of
+    | overly modern technologies, but I would be remiss not to credit 
+    a(href='http://ampersandjs.com') Ampersand.js
+    | .  If you're into that kind of thing, you might find it cool to note
+    | that all of dgbrowser runs in your web browser -- there is no
+    | server-side logic at all, beyond updating the database once every so
+    | often.  And if you're into truly outlandish abuses of web technology,
+    | the above-linked 
+    a(href='http://nyus.joshuawise.com/dgsql/') dgsql
+    | , which was the first generation of this program, is actually what it
+    | sounds like: it's SQLite, running in a WebWorker.  I'm not sure it
+    | performs much better or worse than this, but it certainly performs ...
+    | differently.
+  
+  p
+    | dgbrowser is open-source (because it's just too damn ugly for anyone
+    | to want to steal); you can find it on 
+    a(href='http://github.com/jwise') my GitHub page
+    | .
