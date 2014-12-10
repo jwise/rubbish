@@ -13,7 +13,7 @@ module.exports = AmpersandState.extend({
             deps: ['id'],
             cache: true,
             fn: function () {
-                return '/set/' + this.id;
+                return '#set/' + this.id;
             }
         },
         playCount: {

@@ -60,21 +60,21 @@ module.exports = View.extend({
 
     handleLinkClick: function (e) {
         var aTag = e.target;
-        var local = aTag.host === window.location.host;
+        var local = aTag.host === window.location.host && aTag.pathname === window.location.pathname;
 
         // if it's a plain click (no modifier keys)
         // and it's a local url, navigate internally
         if (local && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
             e.preventDefault();
-            app.navigate(aTag.pathname);
+            app.navigate(aTag.hash);
         }
     },
 
     updateActiveNav: function () {
-        var path = window.location.pathname.slice(1);
+        var path = window.location.hash.slice(1);
 
         this.queryAll('.nav a[href]').forEach(function (aTag) {
-            var aPath = aTag.pathname.slice(1);
+            var aPath = aTag.hash.slice(1);
 
             if ((!aPath && !path) || (aPath && path.indexOf(aPath) === 0)) {
                 dom.addClass(aTag.parentNode, 'active');

@@ -13,7 +13,7 @@ module.exports = AmpersandState.extend({
             deps: ['id'],
             cache: true,
             fn: function () {
-                return '/song/' + this.id;
+                return '#song/' + this.id;
             }
         },
         artist: {
