@@ -17,12 +17,15 @@ module.exports = View.extend({
     },
     handleArtistSearch: function (e) {
         app.navigate('/search/artist/' + encodeURIComponent(this.queryByHook('query').value));
+        return false;
     },
     handleSongSearch: function (e) {
         app.navigate('/search/title/' + encodeURIComponent(this.queryByHook('query').value));
+        return false;
     },
     handleSetSearch: function (e) {
         app.navigate('/search/set/' + encodeURIComponent(this.queryByHook('query').value));
+        return false;
     },
     initialize: function (spec) {
         this.query_val = spec.query_val;
