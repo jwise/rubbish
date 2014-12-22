@@ -8,6 +8,7 @@ var tracking = require('./helpers/metrics');
 var MainView = require('./views/main');
 var WorldModel = require('./models/world-model');
 var LoadingPage = require('./pages/loading');
+var ErrorPage = require('./pages/error');
 var domReady = require('domready');
 
 module.exports = {
@@ -16,12 +17,6 @@ module.exports = {
         var self = window.app = this;
 
         this.world = new WorldModel();
-        this.world.fetch({
-            success: function () {
-                // *NOW* we can kick off the router.
-                self.router.history.start({pushState: false, root: '/'});
-            }
-        });
 
         this.router = new Router();
 
@@ -36,6 +31,18 @@ module.exports = {
             // ...and render it
             mainView.render();
             mainView.handleNewPage(new LoadingPage());
+            
+            self.world.fetch({
+                success: function () {
+                    // *NOW* we can kick off the router.
+                    self.router.history.start({pushState: false, root: '/'});
+                },
+                error: function (m, xhr) {
+                    console.log("XHR error: ", xhr);
+                    mainView.handleNewPage(new ErrorPage({err: "database XHR failed"}));
+                },
+                timeout: 0
+            });
         });
     },
 
