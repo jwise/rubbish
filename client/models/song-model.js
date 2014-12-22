@@ -30,7 +30,7 @@ module.exports = AmpersandState.extend({
                 var self = this;
                 return new SetCollection(
                     app.world.sets.filter(function (set) {
-                        return set.playCollection.some(function (play) { return play.songid == self.id; });
+                        return set.plays.some(function (play) { return play.songid == self.id; });
                     })
                 );
             }
