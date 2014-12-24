@@ -60,7 +60,7 @@ _.extend(History.prototype, Events, {
     // Get the cross-browser normalized URL fragment from the path or hash.
     getFragment: function (fragment) {
         if (fragment == null) {
-            if (this._hasPushState || !this._wantsHashChange) {
+            if (!this._forceHash && (this._hasPushState || !this._wantsHashChange)) {
                 fragment = this.getPath();
             } else {
                 fragment = this.getHash();
@@ -80,6 +80,7 @@ _.extend(History.prototype, Events, {
         this.options          = _.extend({root: '/'}, this.options, options);
         this.root             = this.options.root;
         this._wantsHashChange = this.options.hashChange !== false;
+        this._forceHash       = !!this.options.forceHash; /* i.e., always use a #, even if we're pushState-ing */
         this._hasHashChange   = 'onhashchange' in window;
         this._wantsPushState  = !!this.options.pushState;
         this._hasPushState    = !!(this.options.pushState && this.history && this.history.pushState);
@@ -114,7 +115,7 @@ _.extend(History.prototype, Events, {
 
             // Or if we've started out with a hash-based route, but we're currently
             // in a browser where it could be `pushState`-based instead...
-            } else if (this._hasPushState && this.atRoot()) {
+            } else if (this._hasPushState && this.atRoot() && !this._forceHash) {
                 this.navigate(this.getHash(), {replace: true});
             }
         }
@@ -188,6 +189,9 @@ _.extend(History.prototype, Events, {
 
         // Don't include a trailing slash on the root.
         if (fragment === '' && url !== '/') url = url.slice(0, -1);
+        
+        // If we're forcing hashes, all bets are off...
+        if (this._forceHash) url = this.location.href.replace(/(javascript:|#).*$/, '') + '#' + fragment;
 
         // If pushState is available, we use it to set the fragment as a real URL.
         if (this._hasPushState) {

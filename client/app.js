@@ -35,7 +35,7 @@ module.exports = {
             self.world.fetch({
                 success: function () {
                     // *NOW* we can kick off the router.
-                    self.router.history.start({pushState: false, root: '/'});
+                    self.router.history.start({pushState: true, forceHash: true, root: '/'});
                 },
                 error: function (m, xhr) {
                     console.log("XHR error: ", xhr);
