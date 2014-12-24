@@ -1,5 +1,5 @@
 /*global me, app*/
-var Router = require('ampersand-router');
+var Router = require('../localmodules/ampersand-router');
 var HomePage = require('./pages/home');
 var AllSetsPage = require('./pages/all-sets');
 var SetViewPage = require('./pages/set-view');
