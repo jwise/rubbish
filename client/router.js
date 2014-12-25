@@ -18,6 +18,7 @@ module.exports = Router.extend({
         'set': 'allSets',
         'artist/:id': 'artistView',
         'song/:id': 'songView',
+        'search/artist/:query?p=:page': 'searchArtist',
         'search/artist/:query': 'searchArtist',
         'search/song/:query': 'searchSong',
         'search/title/:query': 'searchSong',
@@ -65,9 +66,10 @@ module.exports = Router.extend({
         }));
     },
     
-    searchArtist: function (query) {
+    searchArtist: function (query, page) {
         this.trigger('page', new SearchArtistPage({
-            query: query
+            query: query,
+            curpage: page
         }));
     },
 
