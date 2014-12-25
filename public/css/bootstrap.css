@@ -4391,7 +4391,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   line-height: 1.42857143;
   text-decoration: none;
   color: #ffffff;
-  background-color: #00bc8c;
+  background-color: #431b1b;
   border: 1px solid transparent;
   margin-left: -1px;
 }
@@ -4411,7 +4411,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination > li > a:focus,
 .pagination > li > span:focus {
   color: #ffffff;
-  background-color: #00dba3;
+  background-color: #602626;
   border-color: transparent;
 }
 .pagination > .active > a,
@@ -4422,7 +4422,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination > .active > span:focus {
   z-index: 2;
   color: #ffffff;
-  background-color: #00dba3;
+  background-color: #552222;
   border-color: transparent;
   cursor: default;
 }
@@ -4433,7 +4433,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination > .disabled > a:hover,
 .pagination > .disabled > a:focus {
   color: #ffffff;
-  background-color: #007053;
+  background-color: #311313;
   border-color: transparent;
   cursor: not-allowed;
 }
@@ -4480,14 +4480,14 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pager li > span {
   display: inline-block;
   padding: 5px 14px;
-  background-color: #00bc8c;
+  background-color: #431b1b;
   border: 1px solid transparent;
   border-radius: 15px;
 }
 .pager li > a:hover,
 .pager li > a:focus {
   text-decoration: none;
-  background-color: #00dba3;
+  background-color: #602626;
 }
 .pager .next > a,
 .pager .next > span {
@@ -4502,7 +4502,7 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pager .disabled > a:focus,
 .pager .disabled > span {
   color: #dddddd;
-  background-color: #00bc8c;
+  background-color: #431b1b;
   cursor: not-allowed;
 }
 .label {
@@ -6518,7 +6518,7 @@ textarea:focus {
 .pager .disabled > a:hover,
 .pager .disabled > a:focus,
 .pager .disabled > span {
-  background-color: #007053;
+  background-color: #311313;
 }
 .breadcrumb a {
   color: #fff;
