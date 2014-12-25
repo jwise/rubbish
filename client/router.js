@@ -1,7 +1,6 @@
 /*global me, app*/
 var Router = require('../localmodules/ampersand-router');
 var HomePage = require('./pages/home');
-var AllSetsPage = require('./pages/all-sets');
 var SetViewPage = require('./pages/set-view');
 var ArtistViewPage = require('./pages/artist-view');
 var SongViewPage = require('./pages/song-view');
@@ -37,9 +36,7 @@ module.exports = Router.extend({
     },
 
     allSets: function () {
-        this.trigger('page', new AllSetsPage({
-            collection: app.world.sets
-        }));
+        this.redirectTo('search/set/.');
     },
     
     latestSet: function () {
