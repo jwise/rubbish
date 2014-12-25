@@ -20,8 +20,11 @@ module.exports = Router.extend({
         'song/:id': 'songView',
         'search/artist/:query?p=:page': 'searchArtist',
         'search/artist/:query': 'searchArtist',
+        'search/song/:query?p=:page': 'searchSong',
         'search/song/:query': 'searchSong',
+        'search/title/:query?p=:page': 'searchSong',
         'search/title/:query': 'searchSong',
+        'search/set/:query?p=:page': 'searchSet',
         'search/set/:query': 'searchSet',
         'search/(*path)': 'search',
         'search': 'search',
@@ -73,15 +76,17 @@ module.exports = Router.extend({
         }));
     },
 
-    searchSong: function (query) {
+    searchSong: function (query, page) {
         this.trigger('page', new SearchSongPage({
-            query: query
+            query: query,
+            curpage: page
         }));
     },
 
-    searchSet: function (query) {
+    searchSet: function (query, page) {
         this.trigger('page', new SearchSetPage({
-            query: query
+            query: query,
+            curpage: page
         }));
     },
 
