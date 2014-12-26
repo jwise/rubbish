@@ -1,23 +1,11 @@
-# Demo App
+# dgjs2
 
-This app was generated with the [ampersand cli tool](http://ampersandjs.com/learn/quick-start-guide).
+This app is the second generation of the Death Guild browser.  To run it, you should:
 
-## How to run it
+1. Make sure your have Node installed on your system.
+1. Install the dependencies: `npm install`
+1. Grab a database to use with it -- either a [prebuilt one](http://nyus.joshuawise.com/dgjs2/db.json), or [build your own](https://github.com/jwise/rubbish/tree/dg-scraper) -- and put it in `public/db.json`.
+1. Launch the local web server: `npm start`
+1. Open http://localhost:3000 in a browser.
 
-1. download/install [node.js](http://nodejs.org/)
-1. install dependencies: `npm install`
-1. run it: `npm start`
-1. open http://localhost:3000 in a browser
-
-## How it's structured
-
-See docs: http://ampersandjs.com/
-Curated modules: http://tools.ampersandjs.com/
-
-## Credits
-
-Built by folks at [&yet](http://andyet.com).
-
-## Want a deeper understanding?
-
-Get the book: http://humanjavascript.com
+If you want to build a "release" version, `make` should put all the build products in `build/`, all ready for you to copy to a web server.
